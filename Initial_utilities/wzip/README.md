@@ -16,6 +16,6 @@ Then the compression `wzip` produce is
 ```
 ## How to run it
 
-In the terminal type `g++ wzip.c -o wzip -Wall -Werror` to compile , then `./wzip file1.txt ... file(n).txt` to run `wzip` on `n` files of your choice .
+In the terminal type `g++ wzip.cpp -o wzip -Wall -Werror` to compile , then `./wzip file1.txt ... file(n).txt` to run `wzip` on `n` files of your choice .
 
 To run the test samples type `./test-wzip.sh` . See [README](https://github.com/remzi-arpacidusseau/ostep-projects/blob/master/tester/README.md) for the possible test options . 
