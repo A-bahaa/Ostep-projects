@@ -73,7 +73,7 @@ static void *compress(void *arg) {
     // therefore the main thread can't join the workers
     Sem_wait(&full);   //if full>=1 , sen_wait returns right away and decriment it
                        //else it will suspend execution waiting for a subsequent post 
-    Sem_wait(&mutex);
+    Sem_wait(&mutex);  // calling sem_wait(&mutex) after sem_wait(&full) to prevent the deadlock
 
     // between wait and post there is a critical section
 
