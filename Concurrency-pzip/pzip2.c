@@ -196,7 +196,7 @@ int main(int argc, char *argv[]) {
       //critical section
       works[fill_ptr].chunk_size = page_size;  //update the size of the buffer with the page size when it is full
       if (offset + page_size > files[i].size)
-        works[fill_ptr].chunk_size = files[i].size - offset; 
+        works[fill_ptr].chunk_size = files[i].size - offset; //update the size of the buffer with rest size of the file
 
       char *addr = mmap(NULL, (size_t)works[fill_ptr].chunk_size, PROT_READ, MAP_PRIVATE, files[i].fd, offset);    //mmap maps files into memory
                         //*addr == NULL atrt address in VA space "indicates to page aligned address which to create the mapping"
