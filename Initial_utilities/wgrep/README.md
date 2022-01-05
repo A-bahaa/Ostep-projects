@@ -10,7 +10,7 @@ this line has foo in it
 this one doesn't
 so does this foolish line; do you see where?
 ```
-written in it, You will write in the terminal as follows
+written in it, You'd write in the terminal as follows:
 ```
 ./wgrep foo test.txt
 ```
@@ -20,12 +20,12 @@ this line has foo in it
 so does this foolish line; do you see where?
 ```
 ## Notes:
-* If you want to search through multiple file, You will write in the terminal as follows:
+* If you want to search through multiple file, You'd write in the terminal as follows:
 ```
 ./wgrep foo test.txt blep.txt blop.txt
 ```
 * If there is a search term, but no file is specified, wgrep should read from standard input.
-And the command would be written as follows:
+The command would be written as follows:
 ```
 ./wgrep foo
 ```
@@ -35,4 +35,4 @@ Open the terminal and compile your program by  `g++ wgrep.cpp -o wgrep -Wall -We
 
 If you want to run `wgrep` on a file in your device use this command  `./wgrep SearchTerm file1.txt ... file(n).txt` .
 
-To run all test cases use `./test-wgrep.sh` command. Look at this [README] (https://github.com/remzi-arpacidusseau/ostep-projects/blob/master/initial-utilities/wgrep/README.md) .
+To run all test cases use `./test-wgrep.sh` command. Look at this [README](https://github.com/remzi-arpacidusseau/ostep-projects/blob/master/initial-utilities/wgrep/README.md) .
