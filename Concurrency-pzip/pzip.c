@@ -1,9 +1,4 @@
 #include "thread_helper.h"
-#include <arpa/inet.h> // htonl ->  "in unix systems"
-//Convert multi-byte integer types from host byte order to network byte order
-//Using network byte ordering for data exchanged between hosts allows 
-//hosts using different architectures to exchange address information
-//without confusion because of byte ordering (big or little endian)
 #include <fcntl.h>     // open, O_* constants
 #include <stdio.h>     // fwrite, fprintf
 #include <stdlib.h>    // exit, malloc
@@ -13,16 +8,13 @@
 #include <sys/types.h>
 #include <unistd.h> // sysconf, close
 
-// http://www.catb.org/esr/structure-packing/
-// https://en.wikipedia.org/wiki/Data_structure_alignment
 
 
-typedef struct result {  // compressed output
-  struct result *next;   //pointer to the struct (4(in 32bit) or 8(in 64bit) bytes)
-  int count;             //4 bytes
-  char character;        //1 byte
-  //char pad[sizeof(struct result *) - sizeof(int) - 1]; //3 bytes of waste space in the strcture
-                                                       //done automatically by the compiler
+typedef struct result {  // compressed output 
+  struct result *next;   //pointer to the struct 
+  int count;             
+  char character;        
+ 
 } Result;
 
 
@@ -35,7 +27,6 @@ typedef struct work {  //array of chunks (not compressed)
 
 typedef struct files {
   int fd;     // file descriptor, it shall not be shared with any other process
-  //char pad[sizeof(off_t) - sizeof(int)];
   off_t size;   //This is a signed integer type used to represent file sizes.
 } Files;
 
@@ -89,7 +80,7 @@ static void *compress(void *arg) {
 
     for (long long i = 0; i < current_work->chunk_size; i++) { //loop on each chunk size
       char character = current_work->addr[i];                  
-      if (character == previous_character) {
+      if (character == previous_character) {   
         previous_count++;
       } 
       else {
@@ -122,13 +113,10 @@ static void *compress(void *arg) {
     Sem_post(&empty); 
   }
 }
-// Littleendian and Bigendian byte order illustrated
-// https://dflund.se/~pi/endian.html
 
 
 static void writeFile(int character_count, char *oldBuff) {
 
-  //character_count = htonl(character_count); // write as network byte order 
   fwrite(&character_count, sizeof(int), 1, stdout);
           //(pointer to the array of elements to be written, size in bytes of each element, number of elements, pointer to a file of the output stream)
   fwrite(oldBuff, sizeof(char), 1, stdout);
@@ -170,7 +158,7 @@ int main(int argc, char *argv[]) {
     files[i - 1].fd = fd;
     files[i - 1].size = sb.st_size; 
 
-    chunks += (sb.st_size / page_size + 1);  //st_size gives the size of the file
+    chunks += (sb.st_size +page_size -1) / page_size ;  //st_size gives the size of the file
   }
 
   // initializing semaphores
@@ -235,6 +223,7 @@ int main(int argc, char *argv[]) {
   for (long i = 0; i < np; i++) {  //np : number of threads
     Pthread_cancel(threads[i]);
     Pthread_join(threads[i], NULL); //wait the thread to cancel
+    
   }
 
   // final compress
@@ -244,7 +233,7 @@ int main(int argc, char *argv[]) {
   char last_character = '\0';
   for (long long i = 0; i < chunks; i++) {
     Result *result;
-    result = works[i].results;  
+    result = works[i].results; 
     while (result != NULL) {   //first chunk : works[0].results == [2a,1b]->null  / sec chunk : works[1].results == [1b,2a]->null
       if (result == works[i].results && result->next != NULL) { // first but not last result
         if (result->character == last_character) { 
