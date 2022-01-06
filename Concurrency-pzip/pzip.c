@@ -58,10 +58,7 @@ static void *compress(void *arg) {
   Work *works = (Work *)arg;
 
   while (1) {
-    // use semaphore instead of mutex and condition variables
-    // because workers will wait for the mutex and
-    // pthread_mutex_lock() is not a cancellation point,
-    // therefore the main thread can't join the workers
+
     Sem_wait(&full);   //if full>=1 , sen_wait returns right away and decriment it
                        //else it will suspend execution waiting for a subsequent post 
     Sem_wait(&mutex);
@@ -125,6 +122,12 @@ static void writeFile(int character_count, char *oldBuff) {
           //argc == arg count -> no. of args passed to the program (files) + 1 (for program name)
           //argv[] == arg vector -> pointer array that point to each argument passed to the program
 int main(int argc, char *argv[]) {
+  
+  /* time testing
+  double time_spent = 0.0;
+  clock_t begin = clock();
+  */
+  
   long page_size = sysconf(_SC_PAGE_SIZE);  //get page size of specific address  (4096)
 
   if (argc <= 1) {  //no files are passed
@@ -228,7 +231,7 @@ int main(int argc, char *argv[]) {
 
   // final compress
   // take the final result and write it to file
-  //consumer
+  // consumer
   int last_count = 0;
   char last_character = '\0';
   for (long long i = 0; i < chunks; i++) {
@@ -292,6 +295,13 @@ int main(int argc, char *argv[]) {
   Sem_destroy(&mutex);
   Sem_destroy(&full);
   Sem_destroy(&empty);
+  
+  
+  /* time testing
+  clock_t end = clock();
+  time_spent += (double)(end-begin) / CLOCKS_PER_SEC;
+  printf("time is %f seconds", time_spent);
+  */
 
   return 0;
 }
