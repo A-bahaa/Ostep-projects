@@ -12,7 +12,7 @@ the output will be as the following:
 ```
 ## How to run and test your program ?
 
-Open the terminal and compile your program by  `g++ pzip.cpp -o wunzip -Wall -Werror -pthread -O` command  .
+Open the terminal and compile your program by  `g++ pzip.cpp -o pzip -Wall -Werror -pthread -O` command  .
 
 If you want to run `pzip` on a file in your device use this command  `./pzip file_name.txt` .
 
